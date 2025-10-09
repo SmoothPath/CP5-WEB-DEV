@@ -1,21 +1,27 @@
-import React from 'react'
+import React from 'react';
+import Slideshow from './Slideshow'; // Componente de slideshow
 
 const Home = () => {
   return (
-    <div className="bg-white min-h-screen text-center py-10">
-      <h2 className="text-3xl font-bold mb-3 text-gray-700">
-        Bem-vindo ao PetShop SmoothPath
-      </h2>
-      <p className="text-gray-700 text-lg mb-6">
-        Aqui você encontra os melhores produtos com qualidade e preço justo.
-      </p>
-      <img
-        src="https://t3.ftcdn.net/jpg/04/81/32/08/360_F_481320874_0ySypkY4mZYl4jEmCOGXMbPgVhocmw2t.jpg"
-        alt="Loja"
-        className="mt-4 mx-auto rounded-lg shadow-md w-3/4"
-      />
-    </div>
-  )
-}
+    <div className="bg-white min-h-screen py-10 px-4 flex flex-col items-center">
+      
+      {/* Título e descrição - acima do slideshow */}
+      <div className="text-center mb-10 max-w-3xl">
+        <h2 className="text-4xl font-bold mb-4 text-[#FF8C42]">
+          Bem-vindo ao PetShop SmoothPath
+        </h2>
+        <p className="text-gray-700 text-lg">
+          Aqui você encontra os melhores produtos para seu pet, com qualidade, carinho e preço justo.
+        </p>
+      </div>
 
-export default Home
+      {/* Slide Show */}
+      <div className="w-full max-w-5xl mb-10">
+        <Slideshow />
+      </div>
+      
+    </div>
+  );
+};
+
+export default Home;
