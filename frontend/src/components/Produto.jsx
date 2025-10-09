@@ -5,89 +5,75 @@ const Produto = () => {
   const API_URL = "http://localhost:5001/produto";
 
   const [produtos, setProdutos] = useState([]);
-  const [novoProduto, setNovoProduto] = useState({
-    nome: "",
-    descricao: "",
-    preco: "",
-  });
+  const [novoProduto, setNovoProduto] = useState({ nome: "", descricao: "", preco: "" });
   const [editar, setEditar] = useState(false);
   const [mostrarLista, setMostrarLista] = useState(false);
 
-  const cadastrarProduto = async () => {
-    if (!novoProduto.nome || !novoProduto.descricao || !novoProduto.preco) {
+  // Cadastrar ou alterar produto
+  const handleSubmit = async () => {
+    const produtoEnviar = {
+      ...novoProduto,
+      preco: parseFloat(novoProduto.preco),
+    };
+
+    if (!produtoEnviar.nome || !produtoEnviar.descricao || isNaN(produtoEnviar.preco)) {
       alert("Todos os campos são obrigatórios!");
       return;
     }
 
     try {
-      const response = await axios.post(API_URL, novoProduto);
-      setProdutos([...produtos, response.data]);
+      if (editar) {
+        // Alterar produto
+        const response = await axios.put(`${API_URL}/${novoProduto.id}`, produtoEnviar);
+        setProdutos(produtos.map((p) => (p.id === novoProduto.id ? response.data : p)));
+      } else {
+        // Cadastrar produto
+        const response = await axios.post(API_URL, produtoEnviar);
+        setProdutos([...produtos, response.data]);
+      }
+
       setNovoProduto({ nome: "", descricao: "", preco: "" });
       setEditar(false);
     } catch (error) {
-      console.log("Erro ao cadastrar produto: ", error);
+      console.log("Erro ao salvar produto: ", error);
     }
   };
 
-  const consultarProduto = async () => {
-    try {
-      const response = await axios.get(API_URL);
-      setProdutos(response.data);
-    } catch (error) {
-      console.log("Erro ao consultar produtos: ", error);
-    }
-  };
-
+  // Consultar produtos ao carregar
   useEffect(() => {
+    const consultarProduto = async () => {
+      try {
+        const response = await axios.get(API_URL);
+        setProdutos(response.data);
+      } catch (error) {
+        console.log("Erro ao consultar produtos: ", error);
+      }
+    };
     consultarProduto();
   }, []);
 
-  const alterarProduto = async () => {
-    if (!novoProduto.nome || !novoProduto.descricao || !novoProduto.preco) {
-      alert("Todos os campos são obrigatórios!");
-      return;
-    }
-
-    try {
-      const response = await axios.put(`${API_URL}/${novoProduto.id}`, novoProduto);
-      setProdutos(produtos.map((produto) => produto.id === novoProduto.id ? response.data : produto));
-      setNovoProduto({ nome: "", descricao: "", preco: "" });
-      setEditar(false);
-    } catch (error) {
-      console.log("Erro ao atualizar produto: ", error);
-    }
-  };
-
-  const deletarProduto = async (id) => {
-    if (window.confirm("Tem certeza que deseja deletar este produto?")) {
-      try {
-        await axios.delete(`${API_URL}/${id}`);
-        setProdutos(produtos.filter((produto) => produto.id !== id));
-      } catch (error) {
-        console.log("Erro ao deletar produto: ", error);
-      }
-    }
-  };
-
+  // Editar produto
   const handleEditar = (produto) => {
     setNovoProduto(produto);
     setEditar(true);
   };
 
-  const handleSubmit = () => {
-    if (editar) {
-      alterarProduto();
-    } else {
-      cadastrarProduto();
+  // Deletar produto
+  const deletarProduto = async (id) => {
+    if (!window.confirm("Deseja realmente deletar este produto?")) return;
+
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+      setProdutos(produtos.filter((p) => p.id !== id));
+    } catch (error) {
+      console.log("Erro ao deletar produto: ", error);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#fff4e6] via-[#ffe6cc] to-white flex flex-col items-center justify-center py-10 px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#fff4e6] via-[#ffe6cc] to-white py-10 px-4">
       <div className="bg-white w-full max-w-3xl rounded-2xl shadow-xl p-8 border border-gray-100">
-        <h1 className="text-4xl font-bold text-center text-[#FF8C42] mb-6">
-          🐾 Cadastro de Produtos
-        </h1>
+        <h1 className="text-4xl font-bold text-center text-[#FF8C42] mb-6">🐾 Cadastro de Produtos</h1>
 
         <form className="space-y-4">
           <div>
@@ -120,12 +106,12 @@ const Produto = () => {
 
           <div>
             <label htmlFor="preco" className="block text-gray-700 font-semibold mb-1">
-              Preço
+              Preço (R$)
             </label>
             <input
               type="number"
               id="preco"
-              placeholder="Preço (R$)"
+              placeholder="Preço"
               value={novoProduto.preco}
               onChange={(e) => setNovoProduto({ ...novoProduto, preco: e.target.value })}
               className="w-full border border-gray-300 rounded-xl px-4 py-2 shadow-sm focus:ring-2 focus:ring-[#FF8C42] focus:outline-none"
@@ -161,9 +147,7 @@ const Produto = () => {
                 <div>
                   <p className="text-lg font-semibold text-[#FF8C42]">{produto.nome}</p>
                   <p className="text-gray-600">{produto.descricao}</p>
-                  <p className="text-green-600 font-bold mt-1">
-                    R$ {produto.preco}
-                  </p>
+                  <p className="text-green-600 font-bold mt-1">R$ {produto.preco}</p>
                 </div>
 
                 <div className="flex gap-2">
