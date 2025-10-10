@@ -71,9 +71,9 @@ const Produto = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#fff4e6] via-[#ffe6cc] to-white py-10 px-4">
-      <div className="bg-white w-full max-w-3xl rounded-2xl shadow-xl p-8 border border-gray-100">
-        <h1 className="text-4xl font-bold text-center text-[#FF8C42] mb-6">🐾 Cadastro de Produtos</h1>
+    <div className="max-h-screen flex flex-col items-center justify-center px-4">
+      <div className="bg-white w-full max-w-3xl rounded-2xl p-8 border shadow-lg border-gray-100">
+        <h1 className="text-4xl font-bold text-center text-[#FF8C42] mb-6">Cadastro de Produtos</h1>
 
         <form className="space-y-4">
           <div>

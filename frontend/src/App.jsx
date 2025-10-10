@@ -2,16 +2,16 @@ import React from 'react'
 import Produto from './components/Produto'
 import Home from './components/Home'
 import Sobre from './components/Sobre'
-import Contato from './components/Contato'
+import Contato from './components/contato'
 import './index.css'
 import Logo from './assets/petshop.png'
 import { FaInstagram, FaFacebookF, FaWhatsapp } from 'react-icons/fa'
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-[#fefaf6] text-gray-700 flex flex-col">
+    <div className="min-h-screen  text-gray-700 flex flex-col">
       {/* Navbar */}
-      <nav className="bg-[#FF8C42] flex justify-between items-center shadow-md px-6 py-4 rounded-b-xl">
+      <nav className="bg-[#FF8C42] flex justify-between items-center px-6 py-4 rounded-b-xl">
         <div className="flex items-center gap-3">
           <img src={Logo} alt="PetShop SmoothPath" className="h-12 w-12 rounded-full object-cover" />
           <h1 className="text-2xl font-bold text-[#fdf6f0]">PetShop SmoothPath</h1>
@@ -29,15 +29,15 @@ const App = () => {
         <Home />
       </section>
 
-      <section id="sobre" className="p-8 bg-white rounded-xl shadow-md my-8">
+      <section id="sobre" className="p-8 bg-white rounded-xl">
         <Sobre />
       </section>
 
-      <section id="produtos" className="p-8 bg-white rounded-xl shadow-md my-8">
+      <section id="produtos" className="p-8 bg-white rounded-xl">
         <Produto />
       </section>
 
-      <section id="contato" className="p-8 bg-white rounded-xl shadow-md my-8">
+      <section id="contato" className="p-8 bg-white rounded-xl">
         <Contato />
       </section>
 
