@@ -126,6 +126,40 @@ app.delete("/produto/:id", async (req, res) => {
     }
 });
 
+// Caminho do arquivo de mensagens
+const caminhoMensagens = path.join(__dirname, "data", "mensagens.json");
+
+//======= Rota para cadastrar mensagem
+app.post("/mensagem", async (req, res) => {
+    const { nome, mensagem } = req.body;
+
+    if (!nome || !mensagem) {
+        return res.status(400).json({ error: "Campos inválidos" });
+    }
+
+    try {
+        // Lê mensagens existentes ou cria array vazio
+        let mensagens = [];
+        try {
+            const data = await fs.readFile(caminhoMensagens, "utf-8");
+            mensagens = JSON.parse(data);
+        } catch (err) {
+            // Se o arquivo não existir, continua com array vazio
+        }
+
+        const novaMensagem = { id: uuid(), nome, mensagem, data: new Date().toISOString() };
+        mensagens.push(novaMensagem);
+
+        await fs.writeFile(caminhoMensagens, JSON.stringify(mensagens, null, 2), "utf-8");
+
+        res.status(201).json(novaMensagem);
+    } catch (error) {
+        console.error("Erro ao gravar mensagem:", error);
+        res.status(500).json({ error: "Erro interno ao salvar mensagem" });
+    }
+});
+
+
 //========== Executando servidor na porta escolhida
 app.listen(port, ()=> {
     console.log(`Servidor rodando na porta http://localhost:${port}`)

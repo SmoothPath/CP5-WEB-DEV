@@ -1,8 +1,26 @@
 [
   {
     "id": "983b66f4-35ce-4c03-b691-7cc83c38f5d7",
-    "nome": "ração pedigre",
-    "descricao": "ótima ração para o seu pet",
+    "nome": "Ração Pedigree",
+    "descricao": "Ração completa e balanceada para cães adultos de todas as raças.",
     "preco": 32.9
+  },
+  {
+    "id": "5a083b37-a1a4-4863-b98d-ce6ba2d39b14",
+    "nome": "Areia Higiênica para Gatos",
+    "descricao": "Areia absorvente e com controle de odor, ideal para gatos domésticos.",
+    "preco": 28.5
+  },
+  {
+    "id": "1b11a732-6078-421b-bd57-c7f07b5b77d0",
+    "nome": "Shampoo Antipulgas PetCare",
+    "descricao": "Shampoo que auxilia no controle de pulgas e mantém o pelo macio.",
+    "preco": 22.9
+  },
+  {
+    "id": "05a65be8-1058-4a35-8065-fe2adabed286",
+    "nome": "Brinquedo Bola de Borracha",
+    "descricao": "Bola resistente para cães brincarem e se exercitarem.",
+    "preco": 15.9
   }
 ]
