@@ -1,71 +1,109 @@
 import React from 'react'
 import Produto from './components/Produto'
-import Home from './components/Home'
-import Sobre from './components/Sobre'
-import Contato from './components/contato'
+import Home from './components/home'       // <-- minúsculo
+import Sobre from './components/sobre'     // <-- minúsculo
+import Contato from './components/contato' // <-- minúsculo
 import './index.css'
 import Logo from './assets/petshop.png'
 import { FaInstagram, FaFacebookF, FaWhatsapp } from 'react-icons/fa'
 
 const App = () => {
   return (
-    <div className="min-h-screen  text-gray-700 flex flex-col">
-      {/* Navbar */}
-      <nav className="bg-[#FF8C42] flex justify-between items-center px-6 py-4 rounded-b-xl">
-        <div className="flex items-center gap-3">
-          <img src={Logo} alt="PetShop SmoothPath" className="h-12 w-12 rounded-full object-cover" />
-          <h1 className="text-2xl font-bold text-[#fdf6f0]">PetShop SmoothPath</h1>
+    <div className="min-h-screen text-gray-700 flex flex-col pt-16 bg-[#fafafa]">
+      {/* Navbar fixa */}
+      <nav className="fixed top-0 inset-x-0 z-50 bg-[#FF8C42]/95 backdrop-blur supports-[backdrop-filter]:bg-[#FF8C42]/85 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="h-16 flex items-center justify-between">
+            {/* Logo + título */}
+            <div className="flex items-center gap-3">
+              <img
+                src={Logo}
+                alt="PetShop SmoothPath"
+                className="h-10 w-10 rounded-full object-cover"
+              />
+              <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight text-[#fdf6f0]">
+                PetShop SmoothPath
+              </h1>
+            </div>
+
+            {/* Links */}
+            <ul className="hidden sm:flex items-center gap-6">
+              {[
+                { href: '#home', label: 'Home' },
+                { href: '#sobre', label: 'Sobre' },
+                { href: '#produtos', label: 'Produtos' },
+                { href: '#contato', label: 'Contato' },
+              ].map((item) => (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    className="text-[#fdf6f0]/90 hover:text-white transition-colors relative after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 hover:after:w-full after:bg-white after:transition-all"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            {/* Sociais */}
+            <div className="flex items-center gap-2">
+              <a
+                href="https://instagram.com"
+                aria-label="Instagram"
+                className="p-2 rounded-full bg-[#fdf6f0]/15 hover:bg-[#fdf6f0]/25 transition"
+              >
+                <FaInstagram className="text-[#fdf6f0]" />
+              </a>
+              <a
+                href="https://facebook.com"
+                aria-label="Facebook"
+                className="p-2 rounded-full bg-[#fdf6f0]/15 hover:bg-[#fdf6f0]/25 transition"
+              >
+                <FaFacebookF className="text-[#fdf6f0]" />
+              </a>
+              <a
+                href="https://wa.me/5511999999999"
+                aria-label="WhatsApp"
+                className="p-2 rounded-full bg-[#fdf6f0]/15 hover:bg-[#fdf6f0]/25 transition"
+              >
+                <FaWhatsapp className="text-[#fdf6f0]" />
+              </a>
+            </div>
+          </div>
         </div>
-        <ul className="flex gap-6">
-          <li><a href="#home" className="text-[#fdf6f0] hover:text-white transition-colors duration-300 cursor-pointer">Home</a></li>
-          <li><a href="#sobre" className="text-[#fdf6f0] hover:text-white transition-colors duration-300 cursor-pointer">Sobre</a></li>
-          <li><a href="#produtos" className="text-[#fdf6f0] hover:text-white transition-colors duration-300 cursor-pointer">Produtos</a></li>
-          <li><a href="#contato" className="text-[#fdf6f0] hover:text-white transition-colors duration-300 cursor-pointer">Contato</a></li>
-        </ul>
       </nav>
 
-      {/* Seções */}
-      <section id="home" className="p-8">
-        <Home />
-      </section>
+      <main className="flex-1">
+        <section id="home">
+          <Home />
+        </section>
 
-      <section id="sobre" className="p-8 bg-white rounded-xl">
-        <Sobre />
-      </section>
+        <section id="sobre">
+          <Sobre />
+        </section>
 
-      <section id="produtos" className="p-8 bg-white rounded-xl">
-        <Produto />
-      </section>
+        <section id="produtos">
+          <div className="max-w-6xl mx-auto px-4">
+            <Produto />
+          </div>
+        </section>
 
-      <section id="contato" className="p-8 bg-white rounded-xl">
-        <Contato />
-      </section>
+        <section id="contato" className="pb-16">
+          <Contato />
+        </section>
+      </main>
 
-      {/* Footer reorganizado em camadas verticais */}
-      <footer className="bg-[#FF8C42] text-[#fdf6f0] mt-auto py-8 flex flex-col items-center gap-4">
-        
-        {/* Logo e nome */}
-        <div className="flex flex-col items-center gap-2">
-          <img src={Logo} alt="PetShop SmoothPath" className="h-16 w-16 rounded-full" />
-          <span className="font-bold text-2xl">PetShop SmoothPath</span>
-        </div>
-
-        {/* Frase da empresa */}
-        <p className="text-center max-w-xs text-sm">
-          Cuidando do seu pet com carinho e qualidade. Atendimento personalizado e produtos de confiança.
-        </p>
-
-        {/* Redes sociais */}
-        <div className="flex gap-6 text-2xl">
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#fdf6f0] transition">
-            <FaInstagram />
-          </a>
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#fdf6f0] transition">
-            <FaFacebookF />
-          </a>
-          <a href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer" className="hover:text-[#fdf6f0] transition">
-            <FaWhatsapp />
-          </a>
+      <footer className="mt-auto bg-[#FF8C42] text-[#fdf6f0]">
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="grid sm:grid-cols-2 gap-6 items-center">
+            <p className="text-sm opacity-90">
+              © 2025 PetShop SmoothPath — Todos os direitos reservados.
+            </p>
+            <div className="flex sm:justify-end gap-3">
+              <a href="#home" className="underline hover:text-white">Voltar ao topo</a>
+              <a href="#contato" className="underline hover:text-white">Contato</a>
+            </div>
+          </div>
         </div>
 
         {/* Políticas de privacidade */}

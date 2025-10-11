@@ -24,53 +24,62 @@ const Slideshow = () => {
     setTimeout(() => {
       setIndex(novoIndex);
       setIsTransitioning(false);
-    }, 500); // duração da transição
+    }, 500);
   };
 
-  const nextSlide = () => iniciarTransicao((index + 1) % imagens.length);
-  const prevSlide = () => iniciarTransicao((index - 1 + imagens.length) % imagens.length);
-
   return (
-    <div className="relative w-full max-w-6xl mx-auto overflow-hidden rounded-xl shadow-lg h-[400px] md:h-[500px] lg:h-[550px]">
-      {/* Imagem anterior (fade-out) */}
-      {isTransitioning && prevIndex !== null && (
-        <img
-          src={imagens[prevIndex]}
-          alt={`Slide ${prevIndex + 1}`}
-          className="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-500"
-        />
-      )}
-
-      {/* Imagem atual (fade-in) */}
+    <div className="relative w-full aspect-[16/7] overflow-hidden rounded-2xl shadow-md">
+      {/* imagem atual */}
       <img
         src={imagens[index]}
-        alt={`Slide ${index + 1}`}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-          isTransitioning ? "opacity-0" : "opacity-100"
+        alt={`Banner ${index + 1}`}
+        className={`w-full h-full object-cover transition-transform duration-500 ${
+          isTransitioning ? "scale-105" : "scale-100"
         }`}
       />
 
-      {/* Setas */}
+      {/* overlay */}
+      <div className="absolute inset-0 bg-black/20" />
+
+      {/* legenda + CTA */}
+      <div className="absolute bottom-6 left-6 right-6 text-white">
+        <h3 className="text-2xl sm:text-3xl font-bold drop-shadow">
+          Cuidado que seu pet sente. Qualidade que você vê.
+        </h3>
+        <p className="mt-1 opacity-95 drop-shadow">
+          Produtos selecionados e atendimento com carinho.
+        </p>
+        <a
+          href="#produtos"
+          className="inline-block mt-4 bg-white text-gray-900 font-semibold px-5 py-2 rounded-xl hover:bg-white/90 transition"
+        >
+          Ver Produtos
+        </a>
+      </div>
+
+      {/* setas */}
       <button
-        onClick={prevSlide}
-        className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black/30 text-white p-3 rounded-full hover:bg-black/50 z-10"
+        onClick={() => iniciarTransicao((index - 1 + imagens.length) % imagens.length)}
+        className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow"
+        aria-label="Anterior"
       >
         ‹
       </button>
       <button
-        onClick={nextSlide}
-        className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black/30 text-white p-3 rounded-full hover:bg-black/50 z-10"
+        onClick={() => iniciarTransicao((index + 1) % imagens.length)}
+        className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow"
+        aria-label="Próximo"
       >
         ›
       </button>
 
-      {/* Indicadores */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+      {/* indicadores */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
         {imagens.map((_, i) => (
           <span
             key={i}
-            className={`w-4 h-4 rounded-full transition-colors duration-300 ${
-              i === index ? "bg-[#FF8C42]" : "bg-white/50"
+            className={`w-3 h-3 rounded-full border border-white ${
+              i === index ? "bg-white" : "bg-white/40"
             }`}
           />
         ))}

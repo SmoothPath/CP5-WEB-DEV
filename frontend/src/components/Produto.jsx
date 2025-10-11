@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const Produto = () => {
-  const API_URL = "http://localhost:5001/produto";
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5001";
 
+const Produto = () => {
   const [produtos, setProdutos] = useState([]);
-  const [novoProduto, setNovoProduto] = useState({ nome: "", descricao: "", preco: "" });
+  const [novoProduto, setNovoProduto] = useState({ id: null, nome: "", descricao: "", preco: "" });
   const [editar, setEditar] = useState(false);
   const [mostrarLista, setMostrarLista] = useState(false);
 
-  // Cadastrar ou alterar produto
   const handleSubmit = async () => {
     const produtoEnviar = {
       ...novoProduto,
@@ -23,152 +22,124 @@ const Produto = () => {
 
     try {
       if (editar) {
-        // Alterar produto
-        const response = await axios.put(`${API_URL}/${novoProduto.id}`, produtoEnviar);
-        setProdutos(produtos.map((p) => (p.id === novoProduto.id ? response.data : p)));
+        await axios.put(`${API_URL}/produto/${produtoEnviar.id}`, produtoEnviar);
       } else {
-        // Cadastrar produto
-        const response = await axios.post(API_URL, produtoEnviar);
-        setProdutos([...produtos, response.data]);
+        await axios.post(`${API_URL}/produto`, produtoEnviar);
       }
 
-      setNovoProduto({ nome: "", descricao: "", preco: "" });
+      setNovoProduto({ id: null, nome: "", descricao: "", preco: "" });
       setEditar(false);
+      consultarProduto();
     } catch (error) {
       console.log("Erro ao salvar produto: ", error);
     }
   };
 
-  // Consultar produtos ao carregar
+  const consultarProduto = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/produto`);
+      setProdutos(response.data);
+    } catch (error) {
+      console.log("Erro ao consultar produto: ", error);
+    }
+  };
+
   useEffect(() => {
-    const consultarProduto = async () => {
-      try {
-        const response = await axios.get(API_URL);
-        setProdutos(response.data);
-      } catch (error) {
-        console.log("Erro ao consultar produtos: ", error);
-      }
-    };
     consultarProduto();
   }, []);
 
-  // Editar produto
-  const handleEditar = (produto) => {
-    setNovoProduto(produto);
+  const handleEditar = (p) => {
+    setNovoProduto({ id: p.id, nome: p.nome, descricao: p.descricao, preco: p.preco });
     setEditar(true);
   };
 
-  // Deletar produto
-  const deletarProduto = async (id) => {
-    if (!window.confirm("Deseja realmente deletar este produto?")) return;
-
+  const handleDelete = async (id) => {
     try {
-      await axios.delete(`${API_URL}/${id}`);
-      setProdutos(produtos.filter((p) => p.id !== id));
+      await axios.delete(`${API_URL}/produto/${id}`);
+      consultarProduto();
     } catch (error) {
       console.log("Erro ao deletar produto: ", error);
     }
   };
 
   return (
-    <div className="max-h-screen flex flex-col items-center justify-center px-4">
-      <div className="bg-white w-full max-w-3xl rounded-2xl p-8 border shadow-lg border-gray-100">
-        <h1 className="text-4xl font-bold text-center text-[#FF8C42] mb-6">Cadastro de Produtos</h1>
+    <div className="bg-white w-full max-w-5xl rounded-2xl p-6 mx-auto shadow-lg my-12">
+      <h2 className="text-2xl font-bold mb-4 text-[#FF8C42]">Cadastro de Produtos</h2>
 
-        <form className="space-y-4">
-          <div>
-            <label htmlFor="nome" className="block text-gray-700 font-semibold mb-1">
-              Nome
-            </label>
-            <input
-              type="text"
-              id="nome"
-              placeholder="Nome do produto"
-              value={novoProduto.nome}
-              onChange={(e) => setNovoProduto({ ...novoProduto, nome: e.target.value })}
-              className="w-full border border-gray-300 rounded-xl px-4 py-2 shadow-sm focus:ring-2 focus:ring-[#FF8C42] focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="descricao" className="block text-gray-700 font-semibold mb-1">
-              Descrição
-            </label>
-            <input
-              type="text"
-              id="descricao"
-              placeholder="Descrição do produto"
-              value={novoProduto.descricao}
-              onChange={(e) => setNovoProduto({ ...novoProduto, descricao: e.target.value })}
-              className="w-full border border-gray-300 rounded-xl px-4 py-2 shadow-sm focus:ring-2 focus:ring-[#FF8C42] focus:outline-none"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="preco" className="block text-gray-700 font-semibold mb-1">
-              Preço (R$)
-            </label>
-            <input
-              type="number"
-              id="preco"
-              placeholder="Preço"
-              value={novoProduto.preco}
-              onChange={(e) => setNovoProduto({ ...novoProduto, preco: e.target.value })}
-              className="w-full border border-gray-300 rounded-xl px-4 py-2 shadow-sm focus:ring-2 focus:ring-[#FF8C42] focus:outline-none"
-            />
-          </div>
-
-          <div className="flex justify-center gap-4 mt-6">
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="bg-[#FF8C42] hover:bg-[#e76f24] text-white font-semibold px-6 py-2 rounded-xl shadow-md transition duration-200"
-            >
-              {editar ? "Alterar" : "Cadastrar"}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setMostrarLista(!mostrarLista)}
-              className="bg-gray-700 hover:bg-gray-800 text-white font-semibold px-6 py-2 rounded-xl shadow-md transition duration-200"
-            >
-              {mostrarLista ? "Ocultar Lista" : "Mostrar Lista"}
-            </button>
-          </div>
-        </form>
-
-        {mostrarLista && (
-          <ul className="mt-8 space-y-4">
-            {produtos.map((produto) => (
-              <li
-                key={produto.id}
-                className="flex justify-between items-center bg-[#FFF0E0] border border-[#FF8C42] rounded-xl p-4 hover:shadow-lg transition"
-              >
-                <div>
-                  <p className="text-lg font-semibold text-[#FF8C42]">{produto.nome}</p>
-                  <p className="text-gray-600">{produto.descricao}</p>
-                  <p className="text-green-600 font-bold mt-1">R$ {produto.preco}</p>
-                </div>
-
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleEditar(produto)}
-                    className="bg-[#FF8C42] hover:bg-[#e76f24] text-white font-bold py-1 px-3 rounded-lg transition"
-                  >
-                    Editar
-                  </button>
-                  <button
-                    onClick={() => deletarProduto(produto.id)}
-                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-lg transition"
-                  >
-                    Deletar
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+      {/* Form */}
+      <div className="grid sm:grid-cols-3 gap-3">
+        <input
+          type="text"
+          placeholder="Nome do Produto"
+          value={novoProduto.nome}
+          onChange={(e) => setNovoProduto({ ...novoProduto, nome: e.target.value })}
+          className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#FF8C42]"
+        />
+        <input
+          type="text"
+          placeholder="Descrição"
+          value={novoProduto.descricao}
+          onChange={(e) => setNovoProduto({ ...novoProduto, descricao: e.target.value })}
+          className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#FF8C42]"
+        />
+        <input
+          type="number"
+          placeholder="Preço"
+          value={novoProduto.preco}
+          onChange={(e) => setNovoProduto({ ...novoProduto, preco: e.target.value })}
+          className="border rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-[#FF8C42]"
+        />
       </div>
+
+      <div className="flex gap-3 mt-4">
+        <button
+          onClick={handleSubmit}
+          className="bg-[#FF8C42] hover:bg-[#e76f24] text-white font-bold py-2 px-4 rounded-lg transition"
+        >
+          {editar ? "Salvar Alterações" : "Cadastrar Produto"}
+        </button>
+        <button
+          onClick={() => setMostrarLista((v) => !v)}
+          className="border border-[#FF8C42] text-[#FF8C42] hover:bg-[#FF8C42] hover:text-white font-bold py-2 px-4 rounded-lg transition"
+        >
+          {mostrarLista ? "Ocultar Lista" : "Listar Produtos"}
+        </button>
+      </div>
+
+      {/* Lista */}
+      {mostrarLista && (
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          {produtos.map((produto) => (
+            <li
+              key={produto.id}
+              className="flex justify-between items-center bg-white border border-[#FF8C42] rounded-xl p-4 hover:shadow-lg transition"
+            >
+              <div>
+                <p className="text-lg font-semibold text-[#FF8C42]">{produto.nome}</p>
+                <p className="text-gray-600">{produto.descricao}</p>
+                <p className="text-green-600 font-bold mt-1">
+                  {Number(produto.preco).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                </p>
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleEditar(produto)}
+                  className="bg-[#FF8C42] hover:bg-[#e76f24] text-white font-bold py-1 px-3 rounded-lg transition"
+                >
+                  Editar
+                </button>
+                <button
+                  onClick={() => handleDelete(produto.id)}
+                  className="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-3 rounded-lg transition"
+                >
+                  Deletar
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
