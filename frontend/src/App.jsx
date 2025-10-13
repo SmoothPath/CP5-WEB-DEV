@@ -2,7 +2,7 @@ import React from 'react'
 import Produto from './components/Produto'
 import Home from './components/Home'       // <-- minúsculo
 import Sobre from './components/Sobre'     // <-- minúsculo
-import Contato from './components/Contato' // <-- minúsculo
+import Contato from './components/contato' // <-- minúsculo
 import './index.css'
 import Logo from './assets/petshop.png'
 import { FaInstagram, FaFacebookF, FaWhatsapp } from 'react-icons/fa'

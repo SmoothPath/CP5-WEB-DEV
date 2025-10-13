@@ -8,21 +8,22 @@ const imagens = [
 
 const Slideshow = () => {
   const [index, setIndex] = useState(0);
-  const [prevIndex, setPrevIndex] = useState(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      iniciarTransicao((index + 1) % imagens.length);
+      iniciarTransicao();
     }, 4000);
-    return () => clearInterval(interval);
-  }, [index]);
 
-  const iniciarTransicao = (novoIndex) => {
-    setPrevIndex(index);
+    return () => clearInterval(interval);
+  }, []); // 👈 roda só uma vez
+
+  const iniciarTransicao = (novoIndex = null) => {
     setIsTransitioning(true);
     setTimeout(() => {
-      setIndex(novoIndex);
+      setIndex((prev) =>
+        novoIndex !== null ? novoIndex : (prev + 1) % imagens.length
+      );
       setIsTransitioning(false);
     }, 500);
   };
@@ -59,14 +60,18 @@ const Slideshow = () => {
 
       {/* setas */}
       <button
-        onClick={() => iniciarTransicao((index - 1 + imagens.length) % imagens.length)}
+        onClick={() =>
+          iniciarTransicao((index - 1 + imagens.length) % imagens.length)
+        }
         className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow"
         aria-label="Anterior"
       >
         ‹
       </button>
       <button
-        onClick={() => iniciarTransicao((index + 1) % imagens.length)}
+        onClick={() =>
+          iniciarTransicao((index + 1) % imagens.length)
+        }
         className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow"
         aria-label="Próximo"
       >
